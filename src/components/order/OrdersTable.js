@@ -20,6 +20,7 @@ import { FiEye } from "react-icons/fi";
 const OrderTable = () => {
   const [orders, setOrders] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+
   useEffect(() => {
     const fetchData = async () => {
       const orders_request = await nuso_requests.getOrderList();
@@ -82,7 +83,6 @@ const OrderTable = () => {
                     <Link onClick={() => getOrderDetail(order.orderId)}>
                       <FiEye />
                     </Link>
-                    {/* FiEye */}
                   </Td>
                 </Tr>
               ))}
@@ -93,4 +93,5 @@ const OrderTable = () => {
     </>
   );
 };
+
 export default OrderTable;

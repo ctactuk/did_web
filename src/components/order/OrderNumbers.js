@@ -23,9 +23,8 @@ import {
   Td,
   Tbody,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import nusoapi from "../../requests/nuso_api_requests.js";
-// import { FiTrash } from "react-icons/fi";
 
 const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
   const [quantity, setQuantity] = useState(10);
@@ -35,7 +34,9 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
   const [countrySelected, setCountrySelected] = useState("US");
   const [stateSelected, setStateSelected] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  // const [shoppingCart, setShoppingCart] = useState([]);
+  const [accountSelected, setAccountSelected] = useState(0);
+  const [trunk, setTrunk] = useState("ORG_WHISL");
+  const [accounts, setAccounts] = useState([]);
 
   const onConsecutiveNumberChange = (event) => {
     setConsecutiveNumbers(event.target.value);
@@ -53,6 +54,10 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
     setCountrySelected(event.target.value);
   };
 
+  const onAccountChange = (event) => {
+    setAccountSelected(event.target.value);
+  };
+
   const onStateSelect = (event) => {
     setStateSelected(event.target.value);
   };
@@ -65,13 +70,25 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
     );
   };
 
-  // const onCheckAllClick = (event) => {
-  //   const checked = event.target.checked;
-  //   setShoppingCart(checked ? searchResults : []);
-  // };
+  useEffect(() => {
+    const fetchData = async () => {
+      const customerAccount = await nusoapi.getCustomerAccount();
+      setAccounts(customerAccount.account);
+    };
+
+    fetchData();
+  }, []);
 
   const onPlaceOrderClick = async (event) => {
-    console.log(event);
+    const order = {
+      didTypes: numberType,
+      country: countrySelected,
+      quantity: quantity,
+      trunk: trunk,
+      account: accountSelected,
+    };
+
+    console.log(order);
   };
 
   const onSearchClick = async (event) => {
@@ -96,6 +113,8 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
       order.consecutive = consecutiveNumbers;
     }
 
+    setTrunk(order.didTypes === "Toll Free" ? "ORG_WHISL_TFT" : "ORG_WHISL");
+
     const result = await nusoapi.searchNumbers(order);
     setSearchResults(result.tns);
   };
@@ -105,11 +124,27 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
       <Flex>
         <Box w="20%">
           <div>
+            <Text>Account*</Text>
+            <Select
+              placeholder="Select account"
+              onChange={onAccountChange}
+              size="sm"
+            >
+              {accounts.map((account) => (
+                <option key={account.id} value={account.id}>
+                  {" "}
+                  {account.name}{" "}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <div>
             <Text>Number Type*</Text>
             <Select
               placeholder="Select number type"
               onChange={onNumberTypeSelect}
               defaultValue="Landline"
+              size="sm"
             >
               <option value="Landline">Landline</option>
               <option value="Mobile">Mobile</option>
@@ -124,6 +159,7 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
               placeholder="Select country"
               onChange={onCountrySelect}
               defaultValue="US"
+              size="sm"
             >
               {countries.map((country) => (
                 <option key={country.isoCode} value={country.isoCode}>
@@ -134,7 +170,11 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
           </div>
           <div>
             <Text>State</Text>
-            <Select placeholder="Select state" onChange={onStateSelect}>
+            <Select
+              placeholder="Select state"
+              onChange={onStateSelect}
+              size="sm"
+            >
               {states.map((state) => (
                 <option key={state.id} value={state.abbreviation}>
                   {state.state} - {state.abbreviation}
@@ -144,7 +184,7 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
           </div>
           <div>
             <Text>Quantity *</Text>
-            <NumberInput defaultValue={quantity} min={0} max={1000}>
+            <NumberInput defaultValue={quantity} min={0} max={1000} size="sm">
               <NumberInputField onChange={onQuantityChange} />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -154,7 +194,12 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
           </div>
           <div>
             <Text>Consecutive #'s</Text>
-            <NumberInput defaultValue={consecutiveNumbers} min={0} max={1000}>
+            <NumberInput
+              defaultValue={consecutiveNumbers}
+              min={0}
+              max={1000}
+              size="sm"
+            >
               <NumberInputField onChange={onConsecutiveNumberChange} />
               <NumberInputStepper>
                 <NumberIncrementStepper />
@@ -164,7 +209,11 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
           </div>
           <div>
             <Text>Vanity Digits</Text>
-            <Input onChange={onVanityDigitsChange} />
+            <Input onChange={onVanityDigitsChange} size="sm" />
+          </div>
+          <div>
+            <Text>Trunk</Text>
+            <Input value={trunk} isReadOnly isDisabled size="sm" />
           </div>
           <Grid templateColumns="repeat(3, 1fr)" gap={2} w="15%" paddingTop={2}>
             <GridItem w="100%" h="10">

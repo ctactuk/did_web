@@ -129,18 +129,35 @@ const searchNumbers = async (searchOptions) => {
 
   try {
     const access_token = localStorage.getItem("access-token");
-    const response = await axios.post(
-      `${BASE_URL}did/search`,
-      searchOptions,
-      { headers: { Authorization: `Bearer ${access_token}` } }
-    );
-      
+    const response = await axios.post(`${BASE_URL}did/search`, searchOptions, {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+
     return response.data;
   } catch (err) {
     accessToken();
   }
 };
 
+const getCustomerAccount = async () => {
+  // https://cpaas-aws.brightlink.com/brightlink/v1/customer/shopping/account
+  if (localStorage.getItem("access-token") == null) {
+    accessToken();
+  }
+
+  try {
+    const access_token = localStorage.getItem("access-token");
+    const response = await axios.post(
+      `${BASE_URL}customer/shopping/account`,
+      { searchItems: [] },
+      { headers: { Authorization: `Bearer ${access_token}` } }
+    );
+
+    return response.data;
+  } catch (err) {
+    accessToken();
+  }
+};
 
 const requests = {
   accessToken,
@@ -149,6 +166,7 @@ const requests = {
   getCountries,
   getStates,
   searchNumbers,
+  getCustomerAccount,
 };
 
 export default requests;
