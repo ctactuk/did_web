@@ -56,7 +56,7 @@ const OrderTable = () => {
         </Center>
       ) : (
         <TableContainer>
-          <Table variant="striped" colorScheme="telegram" h={400} size="md">
+          <Table variant="striped" colorScheme="telegram" size="sm">
             <Thead>
               <Tr>
                 <Th>OrderId</Th>

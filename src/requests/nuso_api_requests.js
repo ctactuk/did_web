@@ -13,7 +13,7 @@ const accessToken = async () => {
   let config = {
     method: "post",
     maxBodyLength: Infinity,
-    url: `${BASE_URL}oauth/token`,
+    url: `${BASE_URL}v1/oauth/token`,
     auth: {
       username: process.env.REACT_APP_NUSO_API_KEY_USERNAME,
       password: process.env.REACT_APP_NUSO_API_KEY,
@@ -44,7 +44,7 @@ const getOrderInfo = async (orderId) => {
 
   try {
     const access_token = localStorage.getItem("access-token");
-    const response = await axios.get(`${BASE_URL}order/${orderId}`, {
+    const response = await axios.get(`${BASE_URL}v2/order/${orderId}`, {
       headers: { Authorization: `Bearer ${access_token}` },
     });
     return response.data;
@@ -61,17 +61,17 @@ const getOrderList = async (page, resultCount) => {
   try {
     const access_token = localStorage.getItem("access-token");
     const response = await axios.post(
-      `${BASE_URL}order/search-value`,
+      `${BASE_URL}v1/order/search-value`,
       {
         searchItems: [
           // {
           //   searchField: "CUSTOMER",
           //   searchText: "Callsy",
           // },
-          {
-            searchField: "STATUS",
-            searchText: "COMPLETED",
-          },
+          // {
+          //   searchField: "STATUS",
+          //   searchText: "COMPLETED",
+          // },
         ],
         paginationData: {
           pageNo: 0,
@@ -95,7 +95,7 @@ const getCountries = async () => {
 
   try {
     const access_token = localStorage.getItem("access-token");
-    const response = await axios.get(`${BASE_URL}country`, {
+    const response = await axios.get(`${BASE_URL}v1/country`, {
       headers: { Authorization: `Bearer ${access_token}` },
     });
 
@@ -112,7 +112,7 @@ const getStates = async () => {
 
   try {
     const access_token = localStorage.getItem("access-token");
-    const response = await axios.get(`${BASE_URL}state`, {
+    const response = await axios.get(`${BASE_URL}v1/state`, {
       headers: { Authorization: `Bearer ${access_token}` },
     });
 
@@ -129,7 +129,7 @@ const searchNumbers = async (searchOptions) => {
 
   try {
     const access_token = localStorage.getItem("access-token");
-    const response = await axios.post(`${BASE_URL}did/search`, searchOptions, {
+    const response = await axios.post(`${BASE_URL}v1/did/search`, searchOptions, {
       headers: { Authorization: `Bearer ${access_token}` },
     });
 
@@ -140,7 +140,6 @@ const searchNumbers = async (searchOptions) => {
 };
 
 const getCustomerAccount = async () => {
-  // https://cpaas-aws.brightlink.com/brightlink/v1/customer/shopping/account
   if (localStorage.getItem("access-token") == null) {
     accessToken();
   }
@@ -148,8 +147,28 @@ const getCustomerAccount = async () => {
   try {
     const access_token = localStorage.getItem("access-token");
     const response = await axios.post(
-      `${BASE_URL}customer/shopping/account`,
+      `${BASE_URL}v1/customer/shopping/account`,
       { searchItems: [] },
+      { headers: { Authorization: `Bearer ${access_token}` } }
+    );
+
+    return response.data;
+  } catch (err) {
+    accessToken();
+  }
+};
+
+const createOrder = async (order) => {
+  // order/create-and-place
+  if (localStorage.getItem("access-token") == null) {
+    accessToken();
+  }
+
+  try {
+    const access_token = localStorage.getItem("access-token");
+    const response = await axios.post(
+      `${BASE_URL}v2/order/create-and-place`,
+      order,
       { headers: { Authorization: `Bearer ${access_token}` } }
     );
 
@@ -167,6 +186,7 @@ const requests = {
   getStates,
   searchNumbers,
   getCustomerAccount,
+  createOrder,
 };
 
 export default requests;

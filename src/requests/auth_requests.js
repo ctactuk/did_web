@@ -6,7 +6,7 @@ const BASE_URL = process.env.REACT_APP_NUSO_API_URL;
 const login = async (email) => {
   localStorage.setItem("user-info", JSON.stringify({ email: email }));
   let access_token = await nusoapi.accessToken();
-  
+
   return access_token;
 };
 

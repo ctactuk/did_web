@@ -12,16 +12,15 @@ import {
   VStack,
   Input,
   Box,
-  Grid,
-  GridItem,
   TableContainer,
-  // Checkbox,
   Table,
   Thead,
   Tr,
   Th,
   Td,
   Tbody,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import nusoapi from "../../requests/nuso_api_requests.js";
@@ -35,8 +34,10 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
   const [stateSelected, setStateSelected] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [accountSelected, setAccountSelected] = useState(0);
+  const [trunkList, setTrunkList] = useState([]);
   const [trunk, setTrunk] = useState("ORG_WHISL");
   const [accounts, setAccounts] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const onConsecutiveNumberChange = (event) => {
     setConsecutiveNumbers(event.target.value);
@@ -70,28 +71,48 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
     );
   };
 
+  const getTrunkByName = () => {
+    const trunkObj = trunkList.find(({ alias }) => alias === trunk);
+    return trunkObj;
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       const customerAccount = await nusoapi.getCustomerAccount();
       setAccounts(customerAccount.account);
+      setTrunkList(customerAccount.trunk);
     };
 
     fetchData();
   }, []);
 
   const onPlaceOrderClick = async (event) => {
+    const trunkObj = getTrunkByName();
+    const pon = getRandomPon().toString();
+    const orderNumbers = searchResults.map((number) => {
+      return {
+        did: number.did[0].toString(),
+        tid: trunkObj?.id,
+        accountId: accountSelected,
+      };
+    });
+
     const order = {
-      didTypes: numberType,
-      country: countrySelected,
-      quantity: quantity,
-      trunk: trunk,
-      account: accountSelected,
+      pon: "PON-" + pon,
+      numbers: orderNumbers,
+      reserveOnly: false,
     };
 
+    nusoapi.createOrder(order);
     console.log(order);
   };
 
+  function getRandomPon() {
+    return Math.floor(Math.random() * 1000000);
+  }
+
   const onSearchClick = async (event) => {
+    setIsLoading(true);
     const order = {
       didTypes: numberType,
       country: countrySelected,
@@ -113,10 +134,13 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
       order.consecutive = consecutiveNumbers;
     }
 
-    setTrunk(order.didTypes === "Toll Free" ? "ORG_WHISL_TFT" : "ORG_WHISL");
+    console.log(numberType);
+
+    setTrunk(numberType[0] === "Toll Free" ? "ORG_WHISL" : "ORG_WHISL_TFT");
 
     const result = await nusoapi.searchNumbers(order);
     setSearchResults(result.tns);
+    setIsLoading(false);
   };
 
   return (
@@ -215,62 +239,75 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
             <Text>Trunk</Text>
             <Input value={trunk} isReadOnly isDisabled size="sm" />
           </div>
-          <Grid templateColumns="repeat(3, 1fr)" gap={2} w="15%" paddingTop={2}>
-            <GridItem w="100%" h="10">
-              <Button w="100%" onClick={cancelButtonClick}>
-                Cancel
-              </Button>
-            </GridItem>
-            <GridItem w="100%" h="10">
-              <Button w="100%" onClick={onSearchClick}>
-                Search
-              </Button>
-            </GridItem>
-            <GridItem w="100%" h="10">
-              <Button
-                w="100%"
-                onClick={onPlaceOrderClick}
-                isDisabled={searchResults.length > 0 ? false : true}
-              >
-                Place Order
-              </Button>
-            </GridItem>
-          </Grid>
+          <SimpleGrid gap={2} columns={{ md: 3, sm: 1 }} paddingTop={2}>
+            <Button w="100%" onClick={cancelButtonClick}>
+              Cancel
+            </Button>
+            <Button w="100%" onClick={onSearchClick}>
+              Search
+            </Button>
+            <Button
+              w="100%"
+              onClick={onPlaceOrderClick}
+              isDisabled={searchResults.length > 0 ? false : true}
+            >
+              Place Order
+            </Button>
+          </SimpleGrid>
         </Box>
         <SimpleGrid columns={1} w="80%">
-          <VStack w="100%">
-            <TableContainer w="95%">
-              <Table
-                variant="striped"
-                colorScheme="telegram"
-                size="sm"
-                w="100%"
-              >
-                <Thead>
-                  <Tr>
-                    <Th>NPA</Th>
-                    <Th>NXX</Th>
-                    <Th>ST</Th>
-                    <Th>LATA</Th>
-                    <Th>DID</Th>
-                    <Th>Type</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {searchResults.map((result) => (
-                    <Tr key={result.did}>
-                      <Td>{result.npa}</Td>
-                      <Td>{result.nxx}</Td>
-                      <Td>{result.snStart}</Td>
-                      <Td>{result.lata}</Td>
-                      <Td>{result.did}</Td>
-                      <Td>{result.didType}</Td>
+          {isLoading ? (
+            <Center>
+              <SimpleGrid columns={1}>
+                <Center>
+                  <Spinner
+                    thickness="4px"
+                    speed="0.65s"
+                    emptyColor="gray.200"
+                    color="blue.500"
+                    size="xl"
+                  />
+                </Center>
+                <Center>
+                  <Text>Searching for Numbers...</Text>
+                </Center>
+              </SimpleGrid>
+            </Center>
+          ) : (
+            <VStack w="100%">
+              <TableContainer w="95%">
+                <Table
+                  variant="striped"
+                  colorScheme="telegram"
+                  size={{ base: "sm", md: "sm", lg: "sm", sm: "xsm" }}
+                  w="100%"
+                >
+                  <Thead>
+                    <Tr>
+                      <Th>NPA</Th>
+                      <Th>NXX</Th>
+                      <Th>ST</Th>
+                      <Th>LATA</Th>
+                      <Th>DID</Th>
+                      <Th>Type</Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </TableContainer>
-          </VStack>
+                  </Thead>
+                  <Tbody>
+                    {searchResults.map((result) => (
+                      <Tr key={result.did}>
+                        <Td>{result.npa}</Td>
+                        <Td>{result.nxx}</Td>
+                        <Td>{result.snStart}</Td>
+                        <Td>{result.lata}</Td>
+                        <Td>{result.did}</Td>
+                        <Td>{result.didType}</Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </TableContainer>
+            </VStack>
+          )}
         </SimpleGrid>
       </Flex>
     </>
