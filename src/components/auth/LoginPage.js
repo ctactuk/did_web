@@ -12,8 +12,9 @@ import {
 import logo from "./logo.png";
 import RegisterForm from "./RegisterForm";
 import login from "../../requests/auth_requests";
-import { login as loggin} from "../../redux/slices/authSlice";
+import { login as loggin } from "../../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
+import requests from "../../requests/whisl_api";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -24,10 +25,12 @@ const LoginPage = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
     const access_token = await login.login(email, password);
+    const login_user = await requests.loginUser("ctactuk", password);
+
     dispatch(
       loggin({
         authenticated: true,
-        token: "&hjjha76879342134",
+        token: login_user.access_token,
         user_info: {},
         nuso_access_token: access_token,
       })

@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 
 import nuso_requests from "../../requests/nuso_api_requests.js";
+import whisl_requests from "../../requests/whisl_api.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiEye } from "react-icons/fi";
@@ -23,8 +24,12 @@ const OrderTable = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const orders_request = await nuso_requests.getOrderList();
-      setOrders(orders_request.orders);
+      await whisl_requests.getOrdersFromProvider().then((response) => {
+        if (typeof response.data !== "undefined") {
+          setOrders(response.data);
+        }
+      });
+
       setIsLoading(false);
     };
 
@@ -64,7 +69,6 @@ const OrderTable = () => {
                 <Th>Placed By</Th>
                 <Th>Customer</Th>
                 <Th>Date</Th>
-                <Th>Supplier</Th>
                 <Th>Status</Th>
                 <Th>Option</Th>
               </Tr>
@@ -77,7 +81,6 @@ const OrderTable = () => {
                   <Td>{order.placedBy}</Td>
                   <Td>{order.customer}</Td>
                   <Td>{order.date}</Td>
-                  <Td>{order.supplier ? order.supplier.name : ""}</Td>
                   <Td>{order.status}</Td>
                   <Td>
                     <Link onClick={() => getOrderDetail(order.orderId)}>

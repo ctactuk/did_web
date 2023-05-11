@@ -23,7 +23,6 @@ import {
   FiLogOut,
 } from "react-icons/fi";
 import { IconType } from "react-icons";
-import { ReactText } from "react";
 import logo from "../auth/logo.png";
 
 interface LinkItemProps {
@@ -34,7 +33,7 @@ interface LinkItemProps {
 const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, link: "/" },
   { name: "Orders", icon: FiTrendingUp, link: "/orders" },
-  // { name: "Users", icon: FiUsers, link: "/users" },
+  { name: "Users", icon: FiUsers, link: "/users" },
   { name: "Settings", icon: FiUsers, link: "/settings" },
   { name: "LogOut", icon: FiLogOut, link: "/logout" },
 ];
@@ -93,7 +92,7 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
         <CloseButton display={{ base: "flex", md: "none" }} onClick={onClose} />
       </Flex>
       {LinkItems.map((link) => (
-        <NavItem key={link.name} icon={link.icon} href={link.link}>
+        <NavItem key={link.name} icon={link.icon} to={link.link}>
           {link.name}
         </NavItem>
       ))}
@@ -103,13 +102,13 @@ const SidebarContent = ({ onClose, ...rest }: SidebarProps) => {
 
 interface NavItemProps extends FlexProps {
   icon: IconType;
-  children: ReactText;
-  href;
+  children: string;
+  to?: string;
 }
-const NavItem = ({ icon, children, href, ...rest }: NavItemProps) => {
+const NavItem = ({ icon, children, to, ...rest }: NavItemProps) => {
   return (
     <Link
-      href={href}
+      href={to}
       style={{ textDecoration: "none" }}
       _focus={{ boxShadow: "none" }}
     >

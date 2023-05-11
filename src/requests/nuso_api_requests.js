@@ -129,9 +129,13 @@ const searchNumbers = async (searchOptions) => {
 
   try {
     const access_token = localStorage.getItem("access-token");
-    const response = await axios.post(`${BASE_URL}v1/did/search`, searchOptions, {
-      headers: { Authorization: `Bearer ${access_token}` },
-    });
+    const response = await axios.post(
+      `${BASE_URL}v1/did/search`,
+      searchOptions,
+      {
+        headers: { Authorization: `Bearer ${access_token}` },
+      }
+    );
 
     return response.data;
   } catch (err) {
@@ -178,6 +182,22 @@ const createOrder = async (order) => {
   }
 };
 
+const getUsers = async () => {
+  if (localStorage.getItem("access-token") == null) {
+    accessToken();
+  }
+
+  try {
+    const access_token = localStorage.getItem("access-token");
+    const response = await axios.get(`${BASE_URL}v1/user/all`, {
+      headers: { Authorization: `Bearer ${access_token}` },
+    });
+    return response.data;
+  } catch (err) {
+    accessToken();
+  }
+};
+
 const requests = {
   accessToken,
   getOrderList,
@@ -187,6 +207,7 @@ const requests = {
   searchNumbers,
   getCustomerAccount,
   createOrder,
+  getUsers,
 };
 
 export default requests;

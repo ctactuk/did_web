@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FiPhoneCall } from "react-icons/fi";
 import OrderNumbers from "./OrderNumbers";
 import OrderTable from "./OrdersTable";
-import nusoapi from "../../requests/nuso_api_requests.js";
+import whisl_api from "../../requests/whisl_api.js";
 
 const Order = () => {
   const [createOrder, setCreateOrder] = useState(false);
@@ -12,10 +12,17 @@ const Order = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const countries_request = await nusoapi.getCountries();
-      const states_request = await nusoapi.getStates();
-      setCountries(countries_request);
-      setStates(states_request);
+      await whisl_api.getStatesFromProvider().then((response) => {
+        if (typeof response.data !== "undefined") {
+          setStates(response.data);
+        }
+      });
+
+      await whisl_api.getCountriesFromProvider().then((response) => {
+        if (typeof response.data !== "undefined") {
+          setCountries(response.data);
+        }
+      });
     };
 
     fetchData();
@@ -39,7 +46,11 @@ const Order = () => {
         <>
           <br />
           <br />
-          <OrderNumbers cancelButtonClick={handleCancelButtonClick} countries={countries} states={states}/>
+          <OrderNumbers
+            cancelButtonClick={handleCancelButtonClick}
+            countries={countries}
+            states={states}
+          />
         </>
       ) : (
         <>

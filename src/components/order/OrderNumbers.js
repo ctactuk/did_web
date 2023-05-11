@@ -24,6 +24,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import nusoapi from "../../requests/nuso_api_requests.js";
+import whisl_api from "../../requests/whisl_api.js";
 
 const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
   const [quantity, setQuantity] = useState(10);
@@ -102,9 +103,7 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
       numbers: orderNumbers,
       reserveOnly: false,
     };
-
-    nusoapi.createOrder(order);
-    console.log(order);
+    whisl_api.createOrder(order);
   };
 
   function getRandomPon() {
@@ -134,13 +133,13 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
       order.consecutive = consecutiveNumbers;
     }
 
-    console.log(numberType);
-
     setTrunk(numberType[0] === "Toll Free" ? "ORG_WHISL" : "ORG_WHISL_TFT");
 
-    const result = await nusoapi.searchNumbers(order);
-    setSearchResults(result.tns);
-    setIsLoading(false);
+    await whisl_api.searchNumbers(order).then((response) => {
+      setSearchResults(response.data.tns);
+
+      setIsLoading(false);
+    });
   };
 
   return (
