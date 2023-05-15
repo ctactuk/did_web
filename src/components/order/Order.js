@@ -1,4 +1,4 @@
-import { Button, Text } from "@chakra-ui/react";
+import { Alert, AlertIcon, Button, Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FiPhoneCall } from "react-icons/fi";
 import OrderNumbers from "./OrderNumbers";
@@ -38,13 +38,18 @@ const Order = () => {
 
   return (
     <>
-      <Button onClick={handleOrderNumbersClick}>
-        Order Numbers
-        <FiPhoneCall />
-      </Button>
+      <Flex>
+        <Button onClick={handleOrderNumbersClick}>
+          Order Numbers
+          <FiPhoneCall />
+        </Button>
+        <Alert status="success" ml={5} mr={2} hidden>
+          <AlertIcon />
+          Data uploaded to the server. Fire on!
+        </Alert>
+      </Flex>
       {createOrder ? (
         <>
-          <br />
           <br />
           <OrderNumbers
             cancelButtonClick={handleCancelButtonClick}
@@ -54,7 +59,6 @@ const Order = () => {
         </>
       ) : (
         <>
-          <br />
           <br />
           <Text>Orders</Text>
           <OrderTable />

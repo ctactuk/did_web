@@ -75,6 +75,17 @@ const refreshToken = async () => {
   return response;
 };
 
+const getOrderInfo = async (orderId) => {
+  const config = {
+    method: "get",
+    url: `${BASE_URL}order/order_info_from_provider/${orderId}`,
+  };
+
+  const response = await axios_with_header(config);
+
+  return response;
+}
+
 const getOrdersFromProvider = async () => {
   const data = {
     searchItems: [],
@@ -120,15 +131,16 @@ const searchNumbers = async (data) => {
   };
 
   return axios_with_header(config);
-}
+};
 
-const getLergDataFromProvider = () => {
+const getLergDataFromProvider = (data) => {
   const config = {
-    method: "get",
-    url: `${BASE_URL}lerg/lerg_data`,
+    method: "post",
+    url: `${BASE_URL}location/lerg_data`,
+    data: data,
   };
 
-  return axios(config);
+  return axios_with_header(config);
 };
 
 const createOrder = async (data) => {
@@ -150,6 +162,7 @@ const request = {
   createOrder,
   refreshToken,
   searchNumbers,
+  getOrderInfo,
 };
 
 export default request;

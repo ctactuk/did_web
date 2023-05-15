@@ -12,7 +12,6 @@ import {
   SimpleGrid,
 } from "@chakra-ui/react";
 
-import nuso_requests from "../../requests/nuso_api_requests.js";
 import whisl_requests from "../../requests/whisl_api.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -37,7 +36,8 @@ const OrderTable = () => {
   }, []);
 
   const getOrderDetail = async (orderId) => {
-    await nuso_requests.getOrderInfo(orderId);
+    const response = await whisl_requests.getOrderInfo(orderId);
+    console.log(response.data);
   };
 
   return (
