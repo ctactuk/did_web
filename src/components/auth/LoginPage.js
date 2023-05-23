@@ -11,35 +11,26 @@ import {
 } from "@chakra-ui/react";
 import logo from "./logo.png";
 import RegisterForm from "./RegisterForm";
-import login from "../../requests/auth_requests";
 import { login as loggin } from "../../redux/slices/authSlice";
 import { useDispatch } from "react-redux";
 import requests from "../../requests/whisl_api";
 
 const LoginPage = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const dispatch = useDispatch();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    const access_token = await login.login(email, password);
-    const login_user = await requests.loginUser("ctactuk", password);
+    const login_user = await requests.loginUser(username, password);
 
     dispatch(
       loggin({
         authenticated: true,
         token: login_user.access_token,
-        user_info: {},
-        nuso_access_token: access_token,
       })
     );
-  };
-
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
   };
 
   const handleRegisterClick = (event) => {
@@ -47,12 +38,14 @@ const LoginPage = () => {
     setShowRegisterForm(true);
   };
 
-  const handleEmailChange = (e) => {
+  const handlePasswordChange = (e) => {
     const { value } = e.target;
-    setEmail(value);
-    if (!validateEmail(value)) {
-      console.log("Invalid email format");
-    }
+    setPassword(value);
+  };
+
+  const handleUserNameChange = (e) => {
+    const { value } = e.target;
+    setUsername(value);
   };
 
   return (
@@ -82,12 +75,12 @@ const LoginPage = () => {
           <Box mt={8}>
             <form onSubmit={handleSubmit}>
               <FormControl>
-                <FormLabel>Email address</FormLabel>
+                <FormLabel>Username</FormLabel>
                 <Input
-                  type="email"
-                  placeholder="Enter your email"
-                  value={email}
-                  onChange={handleEmailChange}
+                  type="text"
+                  placeholder="Enter your username"
+                  value={username}
+                  onChange={handleUserNameChange}
                 />
               </FormControl>
               <FormControl mt={4}>
@@ -96,7 +89,7 @@ const LoginPage = () => {
                   type="password"
                   placeholder="Enter your password"
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                 />
               </FormControl>
               <Button

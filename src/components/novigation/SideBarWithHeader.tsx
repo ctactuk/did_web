@@ -17,13 +17,16 @@ import {
 } from "@chakra-ui/react";
 import {
   FiHome,
-  FiTrendingUp,
   FiUsers,
   FiMenu,
   FiLogOut,
+  FiSettings,
+  FiList,
+  FiUser,
 } from "react-icons/fi";
 import { IconType } from "react-icons";
 import logo from "../auth/logo.png";
+import { NavLink } from "react-router-dom";
 
 interface LinkItemProps {
   name: string;
@@ -32,9 +35,11 @@ interface LinkItemProps {
 }
 const LinkItems: Array<LinkItemProps> = [
   { name: "Home", icon: FiHome, link: "/" },
-  { name: "Orders", icon: FiTrendingUp, link: "/orders" },
+  { name: "Orders", icon: FiList, link: "/orders" },
+  { name: "Customers", icon: FiUsers, link: "/Customers" },
   { name: "Users", icon: FiUsers, link: "/users" },
-  { name: "Settings", icon: FiUsers, link: "/settings" },
+  { name: "Profile", icon: FiUser, link: "/profile" },
+  { name: "Settings", icon: FiSettings, link: "/settings" },
   { name: "LogOut", icon: FiLogOut, link: "/logout" },
 ];
 
@@ -108,7 +113,9 @@ interface NavItemProps extends FlexProps {
 const NavItem = ({ icon, children, to, ...rest }: NavItemProps) => {
   return (
     <Link
-      href={to}
+      as={NavLink}
+      // href={to}
+      to={to}
       style={{ textDecoration: "none" }}
       _focus={{ boxShadow: "none" }}
     >

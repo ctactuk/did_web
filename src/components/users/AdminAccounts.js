@@ -2,6 +2,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Flex,
   Heading,
   Table,
   TableContainer,
@@ -11,9 +12,9 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { FiEdit } from "react-icons/fi";
+import { FiEdit, FiTrash } from "react-icons/fi";
 
-const AdminAccounts = ({ users }) => {
+const AdminAccounts = ({ users, openHandler, deleteHandler }) => {
   return (
     <Card>
       <CardHeader>
@@ -25,8 +26,7 @@ const AdminAccounts = ({ users }) => {
           <Table variant="striped" colorScheme="telegram" size="sm">
             <Thead>
               <Tr>
-                <Th>First Name</Th>
-                <Th>Last Name</Th>
+                <Th>Full Name</Th>
                 <Th>Email</Th>
                 <Th>Active</Th>
                 <Th>Phone Number</Th>
@@ -36,13 +36,21 @@ const AdminAccounts = ({ users }) => {
             <Tbody>
               {users.map((user) => (
                 <Tr key={user.id}>
-                  <Td>{user.firstName}</Td>
-                  <Td>{user.lastName}</Td>
+                  <Td>{user.fullname}</Td>
                   <Td>{user.email}</Td>
-                  <Td>{user.active ? "True" : "False"}</Td>
-                  <Td>{user.phoneNumber}</Td>
+                  <Td>{user.is_active ? "True" : "False"}</Td>
+                  <Td>{user.phone_number}</Td>
                   <Td>
-                    <FiEdit />
+                    <Flex>
+                      <FiEdit
+                        onClick={() => openHandler(user)}
+                        style={{ cursor: "pointer" }}
+                      />
+                      <FiTrash
+                        onClick={() => deleteHandler(user)}
+                        style={{ cursor: "pointer" }}
+                      />
+                    </Flex>
                   </Td>
                 </Tr>
               ))}

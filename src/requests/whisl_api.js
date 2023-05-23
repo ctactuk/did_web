@@ -78,13 +78,13 @@ const refreshToken = async () => {
 const getOrderInfo = async (orderId) => {
   const config = {
     method: "get",
-    url: `${BASE_URL}order/order_info_from_provider/${orderId}`,
+    url: `order/order_info_from_provider/${orderId}`,
   };
 
   const response = await axios_with_header(config);
 
   return response;
-}
+};
 
 const getOrdersFromProvider = async () => {
   const data = {
@@ -97,7 +97,7 @@ const getOrdersFromProvider = async () => {
 
   const config = {
     method: "post",
-    url: `${BASE_URL}order/orders_from_provider`,
+    url: `order/orders_from_provider`,
     data: data,
   };
 
@@ -109,7 +109,7 @@ const getOrdersFromProvider = async () => {
 const getCountriesFromProvider = () => {
   const config = {
     method: "get",
-    url: `${BASE_URL}location/countries`,
+    url: `location/countries`,
   };
   return axios_with_header(config);
 };
@@ -117,7 +117,7 @@ const getCountriesFromProvider = () => {
 const getStatesFromProvider = async () => {
   const config = {
     method: "get",
-    url: `${BASE_URL}location/states`,
+    url: `location/states`,
   };
 
   return axios_with_header(config);
@@ -126,7 +126,7 @@ const getStatesFromProvider = async () => {
 const searchNumbers = async (data) => {
   const config = {
     method: "post",
-    url: `${BASE_URL}number/search_numbers`,
+    url: `number/search_numbers`,
     data: data,
   };
 
@@ -136,7 +136,7 @@ const searchNumbers = async (data) => {
 const getLergDataFromProvider = (data) => {
   const config = {
     method: "post",
-    url: `${BASE_URL}location/lerg_data`,
+    url: `location/lerg_data`,
     data: data,
   };
 
@@ -146,8 +146,35 @@ const getLergDataFromProvider = (data) => {
 const createOrder = async (data) => {
   const config = {
     method: "post",
-    url: `${BASE_URL}order/create_order_on_provider`,
+    url: `order/create_order_on_provider`,
     data: data,
+  };
+
+  return axios_with_header(config);
+};
+
+const getAllClients = async () => {
+  const config = {
+    method: "get",
+    url: `client`,
+  };
+
+  return axios_with_header(config);
+};
+
+const getAllAccounts = async () => {
+  const config = {
+    method: "get",
+    url: `account`,
+  };
+
+  return axios_with_header(config);
+};
+
+const getUserRoles = async () => {
+  const config = {
+    method: "get",
+    url: `role`,
   };
 
   return axios_with_header(config);
@@ -163,6 +190,10 @@ const request = {
   refreshToken,
   searchNumbers,
   getOrderInfo,
+  checkIfTokenExpired,
+  getAllClients,
+  getAllAccounts,
+  getUserRoles,
 };
 
 export default request;

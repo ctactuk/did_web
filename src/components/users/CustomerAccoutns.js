@@ -25,8 +25,7 @@ const Customeraccounts = ({ users }) => {
             <Thead>
               <Tr>
                 <Th>Curtomer</Th>
-                <Th>First Name</Th>
-                <Th>Last Name</Th>
+                <Th>Full Name</Th>
                 <Th>Email</Th>
                 <Th>Active</Th>
                 <Th>Phone Number</Th>
@@ -36,9 +35,8 @@ const Customeraccounts = ({ users }) => {
             <Tbody>
               {users.map((user) => (
                 <Tr key={user.id}>
-                  <Td>{user.accountName}</Td>
-                  <Td>{user.firstName}</Td>
-                  <Td>{user.lastName}</Td>
+                  <Td>{user.client.name}</Td>
+                  <Td>{user.fullname}</Td>
                   <Td>{user.email}</Td>
                   <Td>{user.active ? "True" : "False"}</Td>
                   <Td>{user.phoneNumber}</Td>

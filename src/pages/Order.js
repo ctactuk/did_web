@@ -1,9 +1,9 @@
 import { Alert, AlertIcon, Button, Flex, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FiPhoneCall } from "react-icons/fi";
-import OrderNumbers from "./OrderNumbers";
-import OrderTable from "./OrdersTable";
-import whisl_api from "../../requests/whisl_api.js";
+import OrderNumbers from "../components/order/OrderNumbers";
+import OrderTable from "../components/order/OrdersTable";
+import whisl_api from "../requests/whisl_api.js";
 
 const Order = () => {
   const [createOrder, setCreateOrder] = useState(false);

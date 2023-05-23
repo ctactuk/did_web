@@ -15,7 +15,14 @@ import { useEffect, useState } from "react";
 import nusoapi from "../../requests/nuso_api_requests.js";
 import whisl_api from "../../requests/whisl_api.js";
 
-const OrderSearchForm = ({ cancelButtonClick, countries, states, setIsLoading, setSearchResults, searchResults }) => {
+const OrderSearchForm = ({
+  cancelButtonClick,
+  countries,
+  states,
+  setIsLoading,
+  setSearchResults,
+  searchResults,
+}) => {
   const [quantity, setQuantity] = useState(10);
   const [consecutiveNumbers, setConsecutiveNumbers] = useState();
   const [numberType, setNumberType] = useState(["Landline"]);
@@ -33,7 +40,6 @@ const OrderSearchForm = ({ cancelButtonClick, countries, states, setIsLoading, s
   const [npx, setNpx] = useState("");
   const [lata, setLata] = useState("");
   const [accounts, setAccounts] = useState([]);
-
 
   const onConsecutiveNumberChange = (event) => {
     setConsecutiveNumbers(event.target.value);
@@ -169,6 +175,7 @@ const OrderSearchForm = ({ cancelButtonClick, countries, states, setIsLoading, s
       reserveOnly: false,
     };
     whisl_api.createOrder(order);
+    setSearchResults([]);
   };
 
   function getRandomPon() {
@@ -268,7 +275,7 @@ const OrderSearchForm = ({ cancelButtonClick, countries, states, setIsLoading, s
       <div>
         <Text>State</Text>
         <Select placeholder="Select state" onChange={onStateSelect} size="sm">
-          {states.map((state,idx) => (
+          {states.map((state, idx) => (
             <option key={idx} value={state.abbreviation}>
               {state.state} - {state.abbreviation}
             </option>
@@ -298,7 +305,7 @@ const OrderSearchForm = ({ cancelButtonClick, countries, states, setIsLoading, s
       <div>
         <Text>NXX</Text>
         <Select placeholder="Select NXX" size="sm" onChange={onNpxSelect}>
-          {nxxResults.map((npx,idx) => (
+          {nxxResults.map((npx, idx) => (
             <option key={idx} value={npx}>
               {npx}
             </option>
