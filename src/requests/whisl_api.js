@@ -180,6 +180,15 @@ const getUserRoles = async () => {
   return axios_with_header(config);
 };
 
+const getDashboardData = async () => {
+  const config = {
+    method: "get",
+    url: `dashboard/${1}`,
+  };
+
+  return axios_with_header(config);
+};
+
 const request = {
   loginUser,
   getOrdersFromProvider,
@@ -194,6 +203,7 @@ const request = {
   getAllClients,
   getAllAccounts,
   getUserRoles,
+  getDashboardData,
 };
 
 export default request;

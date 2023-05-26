@@ -1,3 +1,4 @@
+import jwt_decode from "jwt-decode";
 import {
   Box,
   Button,
@@ -32,6 +33,7 @@ const OrderSearchForm = ({
   const [nxxResults, setNxxResults] = useState([]);
   const [lataResults, setLataResults] = useState([]);
   const [stateSelected, setStateSelected] = useState("");
+  const [accountId, setAccountId] = useState(0);
 
   const [accountSelected, setAccountSelected] = useState(0);
   const [trunkList, setTrunkList] = useState([]);
@@ -91,6 +93,9 @@ const OrderSearchForm = ({
   };
 
   useEffect(() => {
+    const account_data = jwt_decode(localStorage.getItem("all_data"));
+    setAccountId(account_data.sub.account_id);
+    // console.log(account_data.sub.account_id);
     const fetchData = async () => {
       const customerAccount = await nusoapi.getCustomerAccount();
 
@@ -173,6 +178,7 @@ const OrderSearchForm = ({
       pon: "PON-" + pon,
       numbers: orderNumbers,
       reserveOnly: false,
+      account_id: accountId,
     };
     whisl_api.createOrder(order);
     setSearchResults([]);

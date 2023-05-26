@@ -13,7 +13,6 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { FiSave, FiX } from "react-icons/fi";
-import whisl_requests from "../../requests/whisl_api.js";
 
 const EditUserModal = ({
   isOpen,
@@ -22,6 +21,7 @@ const EditUserModal = ({
   title,
   handleUpdateUser,
   data,
+  roles,
 }) => {
   const [fullname, setFullname] = useState();
   const [phone, setPhone] = useState();
@@ -43,14 +43,6 @@ const EditUserModal = ({
   const handleOnchangeUsername = (event) => {
     setUsername(event.target.value);
   };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      await whisl_requests.getUserRoles().then((response) => {});
-    };
-
-    fetchData();
-  }, []);
 
   useEffect(() => {
     setFullname(data.fullname);
