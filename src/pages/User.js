@@ -2,17 +2,10 @@ import { useEffect, useState } from "react";
 import AdminAccounts from "../components/users/AdminAccounts";
 import Customeraccounts from "../components/users/CustomerAccoutns";
 import whisl_api from "../requests/whisl_api";
-import {
-  Button,
-  Center,
-  Flex,
-  SimpleGrid,
-  Spinner,
-  Text,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { Button, Flex, useDisclosure } from "@chakra-ui/react";
 import EditUser from "../components/users/Edit";
 import { FiPlus } from "react-icons/fi";
+import Loading from "../components/common/Loading";
 
 const Users = () => {
   const [userCustomer, setUserCustomer] = useState([]);
@@ -28,7 +21,6 @@ const Users = () => {
         if (typeof response.data !== "undefined") {
           setUserCustomer(response.data);
         }
-        
       });
 
       whisl_api.getUserRoles().then((response) => {
@@ -72,22 +64,7 @@ const Users = () => {
         </Button>
       </Flex>
       {isLoading ? (
-        <Center>
-          <SimpleGrid columns={1}>
-            <Center>
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="blue.500"
-                size="xl"
-              />
-            </Center>
-            <Center>
-              <Text>Loading users...</Text>
-            </Center>
-          </SimpleGrid>
-        </Center>
+        <Loading mesage={"Loading users..."} />
       ) : (
         <>
           <AdminAccounts

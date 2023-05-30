@@ -6,16 +6,13 @@ import {
   Tr,
   Th,
   Td,
-  Spinner,
-  Center,
-  Text,
-  SimpleGrid,
 } from "@chakra-ui/react";
 
 import whisl_requests from "../../requests/whisl_api.js";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiEye } from "react-icons/fi";
+import Loading from "../common/Loading.js";
 
 const OrderTable = () => {
   const [orders, setOrders] = useState([]);
@@ -43,22 +40,7 @@ const OrderTable = () => {
   return (
     <>
       {isLoading ? (
-        <Center>
-          <SimpleGrid columns={1}>
-            <Center>
-              <Spinner
-                thickness="4px"
-                speed="0.65s"
-                emptyColor="gray.200"
-                color="blue.500"
-                size="xl"
-              />
-            </Center>
-            <Center>
-              <Text>Loading orders...</Text>
-            </Center>
-          </SimpleGrid>
-        </Center>
+        <Loading mesage="Loading orders..." />
       ) : (
         <TableContainer>
           <Table variant="striped" colorScheme="telegram" size="sm">

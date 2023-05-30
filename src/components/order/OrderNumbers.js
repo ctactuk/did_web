@@ -1,14 +1,8 @@
-import {
-  Flex,
-  SimpleGrid,
-  Text,
-  VStack,
-  Spinner,
-  Center,
-} from "@chakra-ui/react";
+import { Flex, SimpleGrid, VStack } from "@chakra-ui/react";
 import { useState } from "react";
 import OrderTableSearch from "./OrderTableSearch.js";
 import OrderSearchForm from "./OrderSeachForm.js";
+import Loading from "../common/Loading.js";
 
 const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -27,22 +21,7 @@ const OrderNumbers = ({ cancelButtonClick, countries, states }) => {
         />
         <SimpleGrid columns={1} w="80%">
           {isLoading ? (
-            <Center>
-              <SimpleGrid columns={1}>
-                <Center>
-                  <Spinner
-                    thickness="4px"
-                    speed="0.65s"
-                    emptyColor="gray.200"
-                    color="blue.500"
-                    size="xl"
-                  />
-                </Center>
-                <Center>
-                  <Text>Searching for Numbers...</Text>
-                </Center>
-              </SimpleGrid>
-            </Center>
+            <Loading mesage="Searching for Numbers..." />
           ) : (
             <VStack w="100%">
               <OrderTableSearch searchResults={searchResults} />

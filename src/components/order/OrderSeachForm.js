@@ -95,12 +95,12 @@ const OrderSearchForm = ({
   useEffect(() => {
     const account_data = jwt_decode(localStorage.getItem("all_data"));
     setAccountId(account_data.sub.account_id);
-    // console.log(account_data.sub.account_id);
+  
     const fetchData = async () => {
-      const customerAccount = await nusoapi.getCustomerAccount();
-
-      setAccounts(customerAccount.account);
-      setTrunkList(customerAccount.trunk);
+      nusoapi.getCustomerAccount().then((response) => {
+        setAccounts(response.account);
+        setTrunkList(response.trunk);
+      });
     };
 
     fetchData();
